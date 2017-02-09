@@ -1,5 +1,6 @@
 import requests
 import base64
+import json
 
 
 class Device42Api:
@@ -14,11 +15,10 @@ class Device42Api:
     def _poster(self, data, url):
         payload = data
         headers = {
-            'Authorization': 'Basic ' + base64.b64encode(self.username + ':' + self.password),
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Authorization': 'Basic ' + base64.b64encode(self.username + ':' + self.password)
         }
 
-        r = requests.post(url, data=payload, headers=headers, verify=False)
+        r = requests.post(url, payload, headers=headers, verify=False)
         if self.debug:
             msg1 = unicode(payload)
             msg2 = 'Status code: %s' % str(r.status_code)
@@ -71,23 +71,6 @@ class Device42Api:
 
         return r
 
-    # POST
-    def post(self, data, name):
-        url = '%s://%s/api/1.0/%s/' % (self.protocol, self.domain, name)
-        msg = '\tPost request to %s' % url
-        if not self.dry_run:
-            print msg
-        r = self._poster(data, url)
-        return r.json() if r is not None else None
-
-    def post_sub(self, data, name, name2):
-        url = '%s://%s/api/1.0/%s/%s' % (self.protocol, self.domain, name, name2)
-        msg = '\tPost request to %s' % url
-        if not self.dry_run:
-            print msg
-        r = self._poster(data, url)
-        return r.json() if r is not None else None
-
     # GET
     def get_list(self, data, name):
         url = '%s://%s/api/1.0/%s/' % (self.protocol, self.domain, name)
@@ -103,5 +86,13 @@ class Device42Api:
         if not self.dry_run:
             print msg
         return self._deleter(url).json()
+
+    # BULK
+    def bulk(self, data):
+        url = '%s://%s/api/1.0/devices/bulk/' % (self.protocol, self.domain)
+        msg = '\tBulk request to %s ' % url
+        if not self.dry_run:
+            print msg
+        return self._poster({'payload': json.dumps(data)}, url).json()
 
 

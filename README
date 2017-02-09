@@ -1,0 +1,16 @@
+# jamfexplore
+Script to sync JAMF to Device42 (http://device42.com)
+This script was tested with JAMF Pro.
+
+# Requirements
+Take the file `config.yaml.example` and rename it to `config.yaml`. Then change the settings to correct ones.
+Please install requirements `pip install -r requirements.txt`
+
+# Run
+Puppet :
+```
+python starter.py
+```
+
+# Specification
+Current script version migrate `devices, ips, macs and applications data`. If you have any requests\improvments, feel free to contact us.
