@@ -1,6 +1,6 @@
 # jamfexplore
 Script to sync JAMF to Device42 (http://www.device42.com)
-This script was tested with JAMF Pro.
+This script was tested with JSS v9.97.1483031164 and Device42 v12.
 
 # Requirements
 Take the file `config.yaml.example` and rename it to `config.yaml`. Then change the settings to correct ones.
