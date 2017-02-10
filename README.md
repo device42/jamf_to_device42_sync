@@ -1,5 +1,5 @@
 # jamfexplore
-Script to sync JAMF to Device42 (http://device42.com)
+Script to sync JAMF to Device42 (http://www.device42.com)
 This script was tested with JAMF Pro.
 
 # Requirements
@@ -13,4 +13,4 @@ python starter.py
 ```
 
 # Specification
-Current script version migrate `devices, ips, macs and applications data`. If you have any requests\improvments, feel free to contact us.
+Current script version migrate `devices, ips, macs and software data`. If you have any requests\improvments, feel free to contact us.
