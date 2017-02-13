@@ -13,4 +13,4 @@ python starter.py
 ```
 
 # Specification
-Current script version migrate `devices, ips, macs and software data`. If you have any requests\improvments, feel free to contact us.
+Current script version migrate `devices, ips, macs and software data`. If you have any requests\improvements, feel free to contact us.
