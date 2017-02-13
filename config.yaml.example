@@ -1,11 +1,10 @@
 device42:
-  domain: 192.168.0.1
-  protocol: https
+  host: 192.168.0.1
   username: admin
   password: pass
 
 jamf:
-  domain: __subdomain__.jamfcloud.com
+  host: __subdomain__.jamfcloud.com
   username: admin
   password: pass
 

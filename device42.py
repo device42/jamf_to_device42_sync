@@ -7,8 +7,7 @@ class Device42Api:
     def __init__(self, config, options):
         self.username = config['username']
         self.password = config['password']
-        self.domain = config['domain']
-        self.protocol = config['protocol']
+        self.host = config['host']
         self.debug = options['debug']
         self.dry_run = options['dry_run']
 
@@ -73,7 +72,7 @@ class Device42Api:
 
     # GET
     def get_list(self, data, name):
-        url = '%s://%s/api/1.0/%s/' % (self.protocol, self.domain, name)
+        url = 'https://%s/api/1.0/%s/' % (self.host, name)
         msg = '\tGet request to %s ' % url
         if not self.dry_run:
             print msg
@@ -81,7 +80,7 @@ class Device42Api:
 
     # DELETE
     def delete(self, identity, name):
-        url = '%s://%s/api/1.0/%s/%s' % (self.protocol, self.domain, name, identity)
+        url = 'https://%s/api/1.0/%s/%s' % (self.host, name, identity)
         msg = '\tDelete request to %s ' % url
         if not self.dry_run:
             print msg
@@ -89,7 +88,7 @@ class Device42Api:
 
     # BULK
     def bulk(self, data):
-        url = '%s://%s/api/1.0/devices/bulk/' % (self.protocol, self.domain)
+        url = 'https://%s/api/1.0/devices/bulk/' % self.host
         msg = '\tBulk request to %s ' % url
         if not self.dry_run:
             print msg
