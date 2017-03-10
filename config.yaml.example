@@ -1,0 +1,13 @@
+device42:
+  host: 192.168.0.1
+  username: admin
+  password: pass
+
+jamf:
+  host: __subdomain__.jamfcloud.com
+  username: admin
+  password: pass
+
+options:
+  debug: True
+  dry_run: False
