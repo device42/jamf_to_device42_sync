@@ -11,3 +11,4 @@ jamf:
 options:
   debug: True
   dry_run: False
+  no_ips: False

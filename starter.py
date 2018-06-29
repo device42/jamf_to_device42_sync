@@ -118,6 +118,9 @@ def main():
         macs, ips = integration.get_device_network(device['general'])
         software = integration.get_device_software(device['software'])
 
+        if options['no_ips']:
+            ips = []
+
         data['devices'].append({
             'device': device['device'],
             'macs': macs,
