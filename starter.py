@@ -44,6 +44,7 @@ class Integration:
 
                 device.update({
                     'name': general['name'],
+                    'new_name': general['name'],
                     'type': 'physical',
                     'manufacturer': 'Apple Inc.',
                     'hddcount': hdd_count,
