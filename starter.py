@@ -1,3 +1,7 @@
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
+
 import yaml
 from jamf import JamfApi
 from device42 import Device42Api
