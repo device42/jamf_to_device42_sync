@@ -198,7 +198,7 @@ def main():
             ips = []
 
         data['devices'].append({
-            'device': mobile_device['device'],  # todo: only possible error I can see. Might be a different key
+            'device': mobile_device['device'],  
             'macs': macs,
             'ips': ips,
             'software': software
