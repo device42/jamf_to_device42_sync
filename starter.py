@@ -16,11 +16,13 @@ options = config['options']
 jamf_api = JamfApi(jamf, options)
 device42_api = Device42Api(device42, options)
 
+#TODO create and checkout branch D42-13883
 
 class Integration:
 
     def __init__(self):
         self.computers = jamf_api.get_list('computers')
+        self.mobile_devices = jamf_api.get_list('mobiledevices')
 
     def get_computers(self):
         devices = []
@@ -74,6 +76,46 @@ class Integration:
 
         return devices
 
+    def get_mobile_devices(self):
+        mobile_devices = []
+        for mobile_device in self.mobile_devices['mobile_devices']:
+            device = {}
+            computer_data = jamf_api.get_item('mobile_devices', mobile_device['id'])['mobile_device']
+            general = computer_data['general']
+            software = computer_data['applications']
+            purchase = computer_data['purchasing']
+
+            if general['display_name']:
+
+                capacity = 0
+
+                if general:
+                    capacity = int(general['capacity_mb']) / 1000
+
+                device.update({
+                    'name': general['display_name'],
+                    'new_name': general['display_name'],
+                    'type': 'physical',
+                    'manufacturer': 'Apple Inc.',
+                    'hddsize': capacity,
+                    'uuid': general['udid'] if general['udid'] else None,
+                    'serial_no': general['serial_number'] if general['serial_number'] else None,
+                    'hardware': general['model'] if general['model'] else None,
+                    'os': general['os_type'] if general['os_type'] else None,
+                    'osver': general['os_version'] if general['os_version'] else None,
+                    'tags': general['asset_tag'] if general['asset_tag'] else None
+                })
+
+                mobile_devices.append({
+                    'device': {k: v for (k, v) in device.items() if str(v) != str(-1)},
+                    'general': general,
+                    'software': software,
+                    'purchase': purchase
+                })
+
+        return mobile_devices
+
+
     @staticmethod
     def get_device_network(general):
         macs = []
@@ -81,6 +123,10 @@ class Integration:
         if general['mac_address']:
             macs.append({
                 'macaddress': general['mac_address'],
+            })
+        elif general['wifi_mac_address']:
+            macs.append({
+                'macaddress': general['wifi_mac_address']
             })
 
         if general['alt_mac_address']:
@@ -104,10 +150,16 @@ class Integration:
     def get_device_software(applications):
         software = []
         for item in applications['applications']:
-            software.append({
-                'software': item['name'],
-                'version': item['version'],
-            })
+            if item['name']:  # computer
+                software.append({
+                    'software': item['name'],
+                    'version': item['version'],
+                })
+            elif item['application_name']:  # mobile device
+                software.append({
+                    'software': item['application_name'],
+                    'version': item['application_version'],
+                })
 
         return software
 
@@ -115,19 +167,38 @@ class Integration:
 def main():
     integration = Integration()
 
-    devices = integration.get_computers()
+    computers = integration.get_computers()
+    mobile_devices = integration.get_mobile_devices()
+
     data = {
         'devices': []
     }
-    for device in devices:
-        macs, ips = integration.get_device_network(device['general'])
-        software = integration.get_device_software(device['software'])
+
+    # computers
+    for computer in computers:
+        macs, ips = integration.get_device_network(computer['general'])
+        software = integration.get_device_software(computer['software'])
 
         if options['no_ips']:
             ips = []
 
         data['devices'].append({
-            'device': device['device'],
+            'device': computer['device'],
+            'macs': macs,
+            'ips': ips,
+            'software': software
+        })
+
+    # mobile devices
+    for mobile_device in mobile_devices:
+        macs, ips = integration.get_device_network(mobile_device['general'])
+        software = integration.get_device_software(mobile_device['software'])
+
+        if options['no_ips']:
+            ips = []
+
+        data['devices'].append({
+            'device': mobile_device['device'],  # todo: only possible error I can see. Might be a different key
             'macs': macs,
             'ips': ips,
             'software': software
