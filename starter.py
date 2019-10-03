@@ -16,7 +16,6 @@ options = config['options']
 jamf_api = JamfApi(jamf, options)
 device42_api = Device42Api(device42, options)
 
-#TODO create and checkout branch D42-13883
 
 class Integration:
 
