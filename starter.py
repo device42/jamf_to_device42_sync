@@ -115,34 +115,36 @@ class Integration:
 
         return mobile_devices
 
-
     @staticmethod
     def get_device_network(general):
         macs = []
         ips = []
-        if general['mac_address']:
-            macs.append({
-                'macaddress': general['mac_address'],
-            })
-        elif general['wifi_mac_address']:
-            macs.append({
-                'macaddress': general['wifi_mac_address']
-            })
-
-        if general['alt_mac_address']:
-            macs.append({
-                'macaddress': general['alt_mac_address'],
-            })
 
         if general['ip_address']:
             ips.append({
                 'ipaddress': general['ip_address'],
             })
 
-        if general['last_reported_ip']:
-            ips.append({
-                'ipaddress': general['last_reported_ip'],
-            })
+        if 'display_name' in general:  # mobile device
+            if general['wifi_mac_address']:
+                macs.append({
+                    'macaddress': general['wifi_mac_address']
+                })
+        else:  # computer
+            if general['mac_address']:
+                macs.append({
+                    'macaddress': general['mac_address'],
+                })
+
+            if general['alt_mac_address']:
+                macs.append({
+                    'macaddress': general['alt_mac_address'],
+                })
+
+            if general['last_reported_ip']:
+                ips.append({
+                    'ipaddress': general['last_reported_ip'],
+                })
 
         return macs, ips
 
@@ -150,12 +152,13 @@ class Integration:
     def get_device_software(applications):
         software = []
         for item in applications['applications']:
-            if item['name']:  # computer
+            if 'name' in item and item['name']:  # computer
                 software.append({
                     'software': item['name'],
                     'version': item['version'],
                 })
-            elif item['application_name']:  # mobile device
+
+            elif 'application_name' in item and item['application_name']:  # mobile device
                 software.append({
                     'software': item['application_name'],
                     'version': item['application_version'],
@@ -198,7 +201,7 @@ def main():
             ips = []
 
         data['devices'].append({
-            'device': mobile_device['device'],  
+            'device': mobile_device['device'],
             'macs': macs,
             'ips': ips,
             'software': software
