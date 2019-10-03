@@ -86,10 +86,9 @@ class Integration:
             purchase = computer_data['purchasing']
 
             if general['display_name']:
+                capacity = None
 
-                capacity = 0
-
-                if general:
+                if 'capacity_mb' in general and general['capacity_mb']:
                     capacity = int(general['capacity_mb']) / 1000
 
                 device.update({
@@ -97,6 +96,7 @@ class Integration:
                     'new_name': general['display_name'],
                     'type': 'physical',
                     'manufacturer': 'Apple Inc.',
+                    'hddcount': None if capacity is None else 1,
                     'hddsize': capacity,
                     'uuid': general['udid'] if general['udid'] else None,
                     'serial_no': general['serial_number'] if general['serial_number'] else None,
