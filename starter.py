@@ -52,8 +52,8 @@ class Integration:
 						hdd_size = 1.0 * hdd_size / 1000  # convert to Gb
 
 				device.update({
-					'name': general['name'],
-					'new_name': general['name'],
+					'name': '%s-%s' % (general['name'], computer['id']),
+					'new_name': '%s-%s' % (general['name'], computer['id']),
 					'type': newtype,
 					'subtype': newsubtype,
 					'manufacturer': 'Apple Inc.',
@@ -98,8 +98,8 @@ class Integration:
 					capacity = int(general['capacity_mb']) / 1000
 
 				device.update({
-					'name': general['display_name'],
-					'new_name': general['display_name'],
+					'name': '%s-%s' % (general['name'], mobile_device['id']),
+					'new_name': '%s-%s' % (general['name'], mobile_device['id']),
 					'type': newtype,
 					'subtype': newsubtype,
 					'manufacturer': 'Apple Inc.',
@@ -230,6 +230,7 @@ def main():
 
 	# computers
 	for computer in computers:
+		name = computer['device']['name']
 		macs, ips = integration.get_device_network(computer['general'])
 		software = integration.get_device_software(computer['software'])
 		enduser = integration.get_device_enduser(computer['location'])
@@ -246,10 +247,19 @@ def main():
 
 		if enduser:
 			deviceData['endusers'].append(enduser)
+			deviceData['device_custom_fields'].append({
+				'name' : name,
+				'key' : 'user', 
+				'value' : enduser['name'], 
+				'type' : 'related_field', 
+				'related_field_name' : 'endusers'
+			})
 
 	# mobile devices
 	for mobile_device in mobile_devices:
 		general = mobile_device['general']
+		name = mobile_device['device']['name']
+
 		macs, ips = integration.get_device_network(general)
 		software = integration.get_device_software(mobile_device['software'])
 		enduser = integration.get_device_enduser(mobile_device['location'])
@@ -266,14 +276,14 @@ def main():
 		
 		if 'last_inventory_update' in general and general['last_inventory_update']:
 			deviceData['device_custom_fields'].append({
-				'name' : general['display_name'], 
+				'name' : name,
 				'key' : 'last_inventory_update', 
 				'value' : general['last_inventory_update']
 			})
 
 		if 'phone_number' in general and general['phone_number']:
 			deviceData['device_custom_fields'].append({
-				'name' : general['display_name'],
+				'name' : name,
 				'key' : 'phone_number', 
 				'value' : general['phone_number']
 			})
@@ -281,7 +291,7 @@ def main():
 		if enduser:
 			deviceData['endusers'].append(enduser)
 			deviceData['device_custom_fields'].append({
-				'name' : general['display_name'],
+				'name' : name,
 				'key' : 'user', 
 				'value' : enduser['name'], 
 				'type' : 'related_field', 
