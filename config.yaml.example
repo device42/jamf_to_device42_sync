@@ -1,10 +1,10 @@
 device42:
   host: 192.168.0.1
   username: admin
-  password: pass
+  password: adm!nd42
 
 jamf:
-  host: __subdomain__.jamfcloud.com
+  host: tryitout.jamfcloud.com
   username: admin
   password: pass
 
@@ -12,3 +12,58 @@ options:
   debug: True
   dry_run: False
   no_ips: False
+
+custom_fields: 
+  "mobile_device":
+    [
+      {
+        "dict": "general",
+        "key" : "last_inventory_update", 
+        "type": "text", 
+        "related_field_name": 
+      }, 
+      {
+        "dict": "general",
+        "key" : "phone_number", 
+        "type": "text", 
+        "related_field_name":
+      }, 
+      {
+        "dict": "location",
+        "key" : "username", 
+        "type": "related_field", 
+        "related_field_name": "endusers"
+      }
+    ]
+
+  "computer":
+    [
+      {
+        "dict": "location",
+        "key" : "username", 
+        "type": "related_field", 
+        "related_field_name": "endusers"
+      }
+    ]
+
+  "enduser":
+    [
+      {
+        "dict": "location",
+        "key" : "real_name", 
+        "type": "text", 
+        "related_field_name": 
+      },
+      {
+        "dict": "location",
+        "key" : "position", 
+        "type": "text", 
+        "related_field_name": 
+      },
+      {
+        "dict": "location",
+        "key" : "department", 
+        "type": "text", 
+        "related_field_name": 
+      }  
+    ]
