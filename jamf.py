@@ -14,8 +14,14 @@ class JamfApi:
 
     def get_list(self, name):
         return requests.get('https://%s/JSSResource/%s' % (self.host, name), 
-                            headers=self.headers, verify = False).json()
+                            auth = self.auth, 
+                            headers=self.headers 
+                            #verify = False
+                            ).json()
 
     def get_item(self, name, pk):
         return requests.get('https://%s/JSSResource/%s/id/%s' % (self.host, name, pk), 
-                            headers=self.headers, verify = False).json()
+                            auth = self.auth, 
+                            headers=self.headers 
+                            #verify = False
+                            ).json()

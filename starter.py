@@ -82,7 +82,6 @@ class Integration:
 					'cpupower': hardware['processor_speed_mhz'] if hardware['processor_speed_mhz'] else None,
 					'cpucore': hardware['number_cores'] if hardware['number_cores'] else None,
 					'tags': general['asset_tag'] if general['asset_tag'] else None
-					#'building' : location['building'] if location['building'] else None
 				})
 				
 				if location['building']:
@@ -133,8 +132,7 @@ class Integration:
 					'hardware': general['model'] if general['model'] else None,
 					'os': general['os_type'] if general['os_type'] else None,
 					'osver': general['os_version'] if general['os_version'] else None,
-					'tags': general['asset_tag'] if general['asset_tag'] else None 
-					#'building' : location['building'] if location['building'] else None
+					'tags': general['asset_tag'] if general['asset_tag'] else None
 				})
 				
 				
