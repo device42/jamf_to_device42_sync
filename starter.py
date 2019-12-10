@@ -28,6 +28,17 @@ class Integration:
 	def __init__(self):
 		self.computers = jamf_api.get_list('computers')
 		self.mobile_devices = jamf_api.get_list('mobiledevices')
+		self.buildings = jamf_api.get_list('buildings')
+
+	def get_buildings(self):
+		buildings = []
+		for building in self.buildings['buildings']:
+			buildings.append({
+				'name' : building['name']
+			})
+
+		return buildings
+			
 
 	def get_computers(self):
 		devices = []
@@ -74,6 +85,11 @@ class Integration:
 					'tags': general['asset_tag'] if general['asset_tag'] else None
 				})
 
+				if location['building']:
+					device.update({
+					'building' : location['building']
+					})
+
 				devices.append({
 					'device': {k: v for (k, v) in device.items() if str(v) != str(-1)},
 					'general': general,
@@ -115,6 +131,12 @@ class Integration:
 					'osver': general['os_version'] if general['os_version'] else None,
 					'tags': general['asset_tag'] if general['asset_tag'] else None
 				})
+
+				if location['building']:
+					device.update({
+						'building' : location['building']
+					})
+
 
 				mobile_devices.append({
 					'device': {k: v for (k, v) in device.items() if str(v) != str(-1)},
@@ -176,25 +198,19 @@ class Integration:
 		return software
 
 	def define_Type(self, hardware):
-		newtype = None
+		newtype = 'other'
 		newsubtype = None
 		if 'imac' in hardware.lower():
-			newtype = 'other'  # set device newtype to other
 			newsubtype = 'desktop'  # set device newsubtype to desktop
 		elif 'macmini' in hardware.lower():
-			newtype = 'other'  # set device newtype to other
 			newsubtype = 'desktop'  # set device newsubtype to desktop
 		elif 'mac mini' in hardware.lower():
-			newtype = 'other'  # set device newtype to other
 			newsubtype = 'desktop'  # set device newsubtype to desktop
 		elif 'macbook' in hardware.lower():
-			newtype = 'other'  # set device newtype to other
 			newsubtype = 'laptop'  # set device newsubtype to desktop
 		elif 'ipad' in hardware.lower():
-			newtype = 'other'  # set device newtype to other
 			newsubtype = 'tablet'  # set device newsubtype to desktop
 		elif 'iphone' in hardware.lower():
-			newtype = 'other'  # set device newtype to other
 			newsubtype = 'mobile phone'  # set device newsubtype to desktop
 		return newtype, newsubtype
 
@@ -249,12 +265,14 @@ def main():
 	integration = Integration()
 	computers = integration.get_computers()
 	mobile_devices = integration.get_mobile_devices()
+	buildings = integration.get_buildings()
 
 	deviceData = {
 		'devices': [], 
 		'device_custom_fields': [],
 		'endusers': [], 
-		'enduser_custom_fields': []
+		'enduser_custom_fields': [], 
+		'buildings': buildings
 	}
 
 	# computers
@@ -310,6 +328,10 @@ def main():
 
 if __name__ == '__main__':
 	elements = main()
+
+	# Import buildings
+	for element in elements['buildings']:
+		print device42_api.post_building(element)
 
 	# Bulk import of devices
 	for element in elements['devices']:
