@@ -120,6 +120,11 @@ class Device42Api:
         url ='https://%s/api/1.0/endusers/' %self.host
         return self._poster(data, url).json()
 
+    # POST - BUILDING
+    def post_building(self, data):
+        url ='https://%s/api/1.0/buildings/' %self.host
+        return self._poster(data, url).json()
+
     # PUT - END USER CUSTOM FIELDS
     def put_enduserCF(self, data):
         url ='https://%s/api/1.0/custom_fields/endusers/' %self.host
