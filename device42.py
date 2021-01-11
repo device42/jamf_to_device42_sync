@@ -31,6 +31,27 @@ class Device42Api:
 
         return r
 
+    def _put(self, data, url):
+        payload = data
+        headers = {
+            'Authorization': 'Basic ' + base64.b64encode(self.username + ':' + self.password)
+        }
+
+        r = requests.put(url=url, data=payload, headers=headers, verify=False)
+
+        if self.debug:
+            msg1 = unicode(payload)
+            msg2 = 'Status code: %s' % str(r.status_code)
+            msg3 = str(r.text)
+
+            print '\n\t----------- PUT FUNCTION -----------'
+            print '\t' + msg1
+            print '\t' + msg2
+            print '\t' + msg3
+            print '\t------- END OF PUT FUNCTION -------\n'
+
+        return r
+
     def _getter(self, data, url):
         params = data
         headers = {
@@ -93,5 +114,25 @@ class Device42Api:
         if not self.dry_run:
             print msg
         return self._poster({'payload': json.dumps(data)}, url).json()
+
+    # POST - END USER
+    def post_enduser(self, data): 
+        url ='https://%s/api/1.0/endusers/' %self.host
+        return self._poster(data, url).json()
+
+    # POST - BUILDING
+    def post_building(self, data):
+        url ='https://%s/api/1.0/buildings/' %self.host
+        return self._poster(data, url).json()
+
+    # PUT - END USER CUSTOM FIELDS
+    def put_enduserCF(self, data):
+        url ='https://%s/api/1.0/custom_fields/endusers/' %self.host
+        return self._put(data, url).json()
+
+    # PUT - DEVICE CUSTOM FIELDS
+    def put_deviceCF(self, data):
+        url ='https://%s/api/1.0/device/custom_field/' %self.host
+        return self._put(data, url).json()
 
 
