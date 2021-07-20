@@ -12,14 +12,13 @@ class Device42Api:
         self.dry_run = options['dry_run']
 
     def _poster(self, data, url):
-        payload = data
         headers = {
             'Authorization': 'Basic ' + base64.b64encode(self.username + ':' + self.password)
         }
 
-        r = requests.post(url, payload, headers=headers, verify=False)
+        r = requests.post(url, data, headers=headers, verify=False)
         if self.debug:
-            msg1 = unicode(payload)
+            msg1 = unicode(data)
             msg2 = 'Status code: %s' % str(r.status_code)
             msg3 = str(r.text)
 
@@ -86,12 +85,10 @@ class Device42Api:
             print msg
         return self._deleter(url).json()
 
-    # BULK
-    def bulk(self, data):
-        url = 'https://%s/api/1.0/devices/bulk/' % self.host
-        msg = '\tBulk request to %s ' % url
+    # POST
+    def post(self, data, name):
+        url = 'https://%s/api/1.0/%s/' % (self.host, name)
+        msg = '\tPost request to %s ' % url
         if not self.dry_run:
             print msg
-        return self._poster({'payload': json.dumps(data)}, url).json()
-
-
+        return self._poster(data, url).json()
