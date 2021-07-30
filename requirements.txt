@@ -1,4 +1,4 @@
 netaddr==0.7.19
-PyYAML==3.12
+PyYAML==5.4
 requests==2.13.0
 xmltodict==0.10.2
