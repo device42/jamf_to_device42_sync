@@ -78,41 +78,35 @@ class Integration:
     def get_device_network(general):
         macs = []
         ips = []
-        device_name = general['name']
         if general['mac_address']:
             macs.append({
                 'macaddress': general['mac_address'],
-                'device': device_name
             })
 
         if general['alt_mac_address']:
             macs.append({
                 'macaddress': general['alt_mac_address'],
-                'device': device_name
             })
 
         if general['ip_address']:
             ips.append({
                 'ipaddress': general['ip_address'],
-                'device': device_name
             })
 
         if general['last_reported_ip']:
             ips.append({
                 'ipaddress': general['last_reported_ip'],
-                'device': device_name
             })
 
         return macs, ips
 
     @staticmethod
-    def get_device_software(applications, device_name):
+    def get_device_software(applications):
         software = []
         for item in applications['applications']:
             software.append({
                 'software': item['name'],
                 'version': item['version'],
-                'device': device_name
             })
 
         return software
@@ -127,7 +121,7 @@ def main():
     }
     for device in devices:
         macs, ips = integration.get_device_network(device['general'])
-        software = integration.get_device_software(device['software'], device['general']['name'])
+        software = integration.get_device_software(device['software'])
 
         if options['no_ips']:
             ips = []
@@ -145,14 +139,5 @@ def main():
 if __name__ == '__main__':
     elements = main()
     for element in elements['devices']:
-        print device42_api.post(element['device'], 'devices')
-
-        for mac in element['macs']:
-            print device42_api.post(mac, 'macs')
-
-        for ip in element['ips']:
-            print device42_api.post(ip, 'ips')
-
-        for software in element['software']:
-            print device42_api.post(software, 'software_details')
+        print device42_api.bulk(element)
     print '\n Finished'
