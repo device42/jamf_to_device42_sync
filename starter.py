@@ -54,16 +54,22 @@ class Integration:
                     'hddcount': hdd_count,
                     'hddsize': hdd_size,
                     'uuid': general['udid'] if general['udid'] else None,
-                    'serial_no': general['serial_number'] if general['serial_number'] else None,
                     'hardware': hardware['model'] if hardware['model'] else None,
                     'os': hardware['os_name'] if hardware['os_name'] else None,
                     'osver': hardware['os_version'] if hardware['os_version'] else None,
                     'memory': hardware['total_ram_mb'] if hardware['total_ram_mb'] else None,
                     'cpucount': hardware['number_processors'] if hardware['number_processors'] else None,
-                    'cpupower': hardware['processor_speed_mhz'] if hardware['processor_speed_mhz'] else None,
-                    'cpucore': hardware['number_cores'] if hardware['number_cores'] else None,
                     'tags': general['asset_tag'] if general['asset_tag'] else None
                 })
+
+                if general['serial_number']:
+                    device['serial_no'] = general['serial_number']
+
+                if hardware['processor_speed_mhz']:
+                    device['cpupower'] = hardware['processor_speed_mhz']
+
+                if hardware['number_cores']:
+                    device['cpucore'] = hardware['number_cores']
 
                 devices.append({
                     'device': {k: v for (k, v) in device.items() if str(v) != str(-1)},
